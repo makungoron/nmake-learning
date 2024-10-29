@@ -1,8 +1,10 @@
 # NMAKE check
 
-WindowsでGNUのmakeの代わりに使う`nmake`の動作テスト。
+WindowsでC++をビルドする際に、
+- コンパイラにMSVC++の`cl.exe`を使う
+- makeの代わりに使う`nmake.exe`を使う
 
-GNUのmakefileとはちょっと違う。
+場合のサンプルプログラム集。
 
 ## 開発環境
 

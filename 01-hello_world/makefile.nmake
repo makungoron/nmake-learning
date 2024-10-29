@@ -13,10 +13,8 @@ BIN_DIR = bin
 TARGET = $(BIN_DIR)\01-hello_world.exe
 
 # Source files and object files
-SOURCES = $(SRC_DIR)\main.cpp  # Add any additional source files
 OBJECTS = $(OBJ_DIR)\main.obj $(OBJ_DIR)\lib.obj  # Match with source files
 
-!MESSAGE SOURCES: $(SOURCES)
 !MESSAGE OBJECTS: $(OBJECTS)
 
 # Build rules
