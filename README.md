@@ -15,6 +15,11 @@ Visual Studioが動かせるWindowsマシンであれば、古すぎなければ
   - 多分、2019や2022以降のVSでも動く。
   - C++関係のビルドツールをVisual Studio Installerでインストールしておく。
   - VSについてくる**開発者用Command Prompt**または**開発者用Powershell**を使う。この中に入って`cl.exe`や`nmake`にパスが通っていることを確認する。
+- Python 3.10 or above
+  - 一部、Makefileを生成するために使用する。
+  - これも開発者用Command Prompt or PS上で`python`コマンドが使えるようになっていればOK。
+  - おそらくPATHを通す必要あり。
+  - 標準ライブラリしか使わない。
 
 ## 実行方法
 
