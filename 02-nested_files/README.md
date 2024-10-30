@@ -57,12 +57,12 @@ NMAKE : fatal error U1073: 'obj\tool\calc.obj' のビルド方法が指定され
 
 これの実現方法はいくつか考えられるので、01-hello_worldから地続きで、わかりやすいように複数の解決策を試していきます。
 
-### 解決策1: 直接指定する
+### 改善方法1: 直接指定する
 
 以下のように追加した依存関係について,
 ビルド方法を直接指定すればとりあえずは動きます。
 
-このMakefileファイルの全体像は`makefile01.nmake`に書いてあります。
+このMakefileファイルの全体は`makefile01.nmake`に書いてあります。
 
 ```makefile
 # Makefile.nmake
@@ -109,23 +109,50 @@ clean:
 
 ---
 
-しかし、
+### 改善方法2: tool/以下を推論規則に書き換える
 
-しかし、問題はこの処理を自動化するところにある。
-毎回、新しいcppを導入したらmakefileを手動で更新するのは手間がかかるし保守が難しいので、なんとか自動化したいところ。
+改善方法1では、新しいcppファイルを依存関係に追加するたびにMakefileを書き直す必要があり、保守が大変になってしまいます。
+- たとえば`tool/`以下に新しいcppファイル`calc2.cpp`を追加しようとした場合、`SRCS`, `OBJS`に依存関係を追加し、さらに、`obj\tool\calc2.obj : src\tool\calc2.cpp`のブロックを書かなければなりません。
 
-UNIXの`make`は以下のように`wildcard`を使って`src/`以下の全ディレクトリを再帰的に拾うことができたが、残念ながらnmakeではできない。
+そもそも、同じビルド手法をファイルごとに別々に書くのは、かなり冗長でわかりにくくなってしまいます。
+
+少なくとも、`tools/`以下については`src/`と同じく、`{src\}.cpp{obj\}.obj:`のような書き方ができれば楽そうです。
+これは以下のように書けば動きます。
+
+このMakefileファイルの全体は`makefile02.nmake`に書いてあります。
+
+```makefile
+{src\tool\}.cpp{obj\tool\}.obj:
+	@echo Compiling $< $@
+	@echo $(@D)
+	@if NOT EXIST $(@D) mkdir $(@D)
+	$(CPP) /nologo /c $(CFLAGS) $< /Fo"$@"
+```
+
+これで、少なくとも`src/`と`src/tool/`以下にあるcppであれば、追加しても自動でビルド対象になるように設定できました。
+
+ちなみに、以下のような書き方はできません。
+
+```
+# この書き方はエラーになる
+{src\}.cpp{obj\}.obj:
+{src\tool\}.cpp{obj\tool\}.obj:
+	@echo Compiling $< $@
+	@echo $(@D)
+	@if NOT EXIST $(@D) mkdir $(@D)
+	$(CPP) /nologo /c $(CFLAGS) $< /Fo"$@"
+```
+
+---
+
+### おまけ
+
+GNU makeは以下のように`wildcard`を使って`src/`以下の全ディレクトリを再帰的に拾うことができますが、残念ながらnmakeではできないようです。
 
 ```makefile
 SRCS := $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/**/*.cpp)
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 ```
-
-解決策としては、
-
-- ディレクトリの階層ごとに`{$(SRC_DIR)*\}.cpp{$(OBJ_DIR)\}.obj:` のブロックを作る。
-  - また、それらのSRC_DIR, OBJ_DIRの組をなんとか定義する必要がある。
-    - Makefile内でなんとか再帰的にSRCS, OBJSを定義するか、外部ファイルに定義して`!INCLUDE`で読み込む方法がある。
 
 Makefile内の機能でゴリゴリに実装してもよいが、複雑になってくるとMakefile自体が煩雑になってしまう。
 

@@ -1,4 +1,5 @@
 # Makefile.nmake
+# directory-dependency
 
 # Compiler and flags
 CPP = cl.exe
@@ -12,8 +13,6 @@ BIN_DIR = bin
 # Output executable
 TARGET = 02-nested_files.exe
 
-SRC_DIRS = src src\tool
-OBJ_DIRS = obj obj\tool
 SRCS = src\lib.cpp src\main.cpp src\tool\calc.cpp
 OBJS = obj\lib.obj obj\main.obj obj\tool\calc.obj
 
