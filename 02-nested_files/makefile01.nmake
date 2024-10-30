@@ -22,7 +22,7 @@ OBJS = obj\lib.obj obj\main.obj obj\tool\calc.obj
 all: $(TARGET)
 $(TARGET) : $(OBJS)
 	@echo Linking...
-	@if NOT EXIST $(@D) mkdir $(@D)
+	@if NOT EXIST $(BIN_DIR) mkdir $(BIN_DIR)
 	$(CPP) /nologo $(OBJS) /Fe"$(BIN_DIR)\$(TARGET)"
 
 {src\}.cpp{obj\}.obj:

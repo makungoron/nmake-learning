@@ -1,5 +1,4 @@
 # Makefile.nmake
-# directory-dependency
 
 # Compiler and flags
 CPP = cl.exe
@@ -11,10 +10,12 @@ OBJ_DIR = obj
 BIN_DIR = bin
 
 # Output executable
-TARGET = 02-nested_files.exe
+TARGET = 03-more_nested_files.exe
 
-SRCS = src\lib.cpp src\main.cpp src\tool\calc.cpp
-OBJS = obj\lib.obj obj\main.obj obj\tool\calc.obj
+SRC_DIRS = src src\component src\tool src\tool\common
+OBJ_DIRS = obj obj\component obj\tool obj\tool\common
+SRCS = src\component\base.cpp src\component\three.cpp src\lib.cpp src\main.cpp src\tool\calc.cpp src\tool\common\common_tool.cpp
+OBJS = obj\component\base.obj obj\component\three.obj obj\lib.obj obj\main.obj obj\tool\calc.obj obj\tool\common\common_tool.obj
 
 !MESSAGE SRCS = $(SRCS)
 !MESSAGE OBJS = $(OBJS)
@@ -31,7 +32,19 @@ $(TARGET) : $(OBJS)
 	@if NOT EXIST $(@D) mkdir $(@D)
 	$(CPP) /nologo /c $(CFLAGS) $< /Fo"$@"
 
+{src\component\}.cpp{obj\component\}.obj:
+	@echo Compiling $< $@
+	@echo $(@D)
+	@if NOT EXIST $(@D) mkdir $(@D)
+	$(CPP) /nologo /c $(CFLAGS) $< /Fo"$@"
+
 {src\tool\}.cpp{obj\tool\}.obj:
+	@echo Compiling $< $@
+	@echo $(@D)
+	@if NOT EXIST $(@D) mkdir $(@D)
+	$(CPP) /nologo /c $(CFLAGS) $< /Fo"$@"
+
+{src\tool\common\}.cpp{obj\tool\common\}.obj:
 	@echo Compiling $< $@
 	@echo $(@D)
 	@if NOT EXIST $(@D) mkdir $(@D)

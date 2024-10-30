@@ -23,7 +23,7 @@ all: $(TARGET)
 # Link object files to create the executable
 $(TARGET) : $(OBJECTS)
 	@echo Linking...
-    @if NOT EXIST $(@D) mkdir $(@D)
+	@if NOT EXIST $(BIN_DIR) mkdir $(BIN_DIR)
 	$(CPP) /nologo $(OBJECTS) /Fe"$(TARGET)"
 
 # Compile source files into object files
