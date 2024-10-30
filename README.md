@@ -1,4 +1,4 @@
-# NMAKE check
+# nmake-learning
 
 WindowsでC++をビルドする際に、
 - コンパイラにMSVC++の`cl.exe`を使う
