@@ -1,0 +1,43 @@
+# Makefile.nmake
+# most simplest way
+
+# Compiler and flags
+CPP = cl.exe
+CFLAGS = /EHsc /W4 /Iinclude  # Include any additional flags or directories
+
+# Directories
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+
+# Output executable
+TARGET = 02-nested_files.exe
+
+SRCS = src\lib.cpp src\main.cpp src\tool\calc.cpp
+OBJS = obj\lib.obj obj\main.obj obj\tool\calc.obj
+
+!MESSAGE SRCS = $(SRCS)
+!MESSAGE OBJS = $(OBJS)
+
+all: $(TARGET)
+$(TARGET) : $(OBJS)
+	@echo Linking...
+	@if NOT EXIST $(@D) mkdir $(@D)
+	$(CPP) /nologo $(OBJS) /Fe"$(BIN_DIR)\$(TARGET)"
+
+{src\}.cpp{obj\}.obj:
+	@echo Compiling $< $@
+	@echo $(@D)
+	@if NOT EXIST $(@D) mkdir $(@D)
+	$(CPP) /nologo /c $(CFLAGS) $< /Fo"$@"
+
+obj\tool\calc.obj : src\tool\calc.cpp
+	@echo Compiling $? $@
+	@echo $(@D)
+	@if NOT EXIST $(@D) mkdir $(@D)
+	$(CPP) /nologo /c $(CFLAGS) $? /Fo"$@"
+
+# Clean up build files
+clean:
+	del /Q /S $(OBJ_DIR)\*.obj
+	del /Q $(BIN_DIR)\$(TARGET)
