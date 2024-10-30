@@ -142,33 +142,3 @@ clean:
 	@if NOT EXIST $(@D) mkdir $(@D)
 	$(CPP) /nologo /c $(CFLAGS) $< /Fo"$@"
 ```
-
----
-
-### おまけ
-
-GNU makeは以下のように`wildcard`を使って`src/`以下の全ディレクトリを再帰的に拾うことができますが、残念ながらnmakeではできないようです。
-
-```makefile
-SRCS := $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/**/*.cpp)
-OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
-```
-
-Makefile内の機能でゴリゴリに実装してもよいが、複雑になってくるとMakefile自体が煩雑になってしまう。
-
-そこで、Pythonを使ってmakefileを自動生成するスクリプトを作成した。
-srcディレクトリが増えても、それに応じてSRCSなどを更新したmakefileを自動で生成する。
-`configure`などに近いアプローチ。
-Makefileだけで解決しないのはスマートではない気がするが、Pythonでより柔軟に書けるようになるメリットもあるので一長一短ある。
-
-Pythonについては、Windowsの場合は何らかの方法で環境にインストールする必要がある点に注意。
-macOS/Linuxではそれなりのバージョンのものが標準でインストールされているので問題ない。
-
-`configure`を模して作ってみた。
-このサンプルではオプションは無い。
-configure.batはただpythonを呼び出しているだけ。
-
-```cmd
-.\configure.bat
-nmake /nologo /f makefile.nmake
-```
